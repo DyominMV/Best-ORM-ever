@@ -1,7 +1,7 @@
 package bestorm;
 
 /**
- * Всё то же самое но действия выполняются в транзации
+ * Всё то же что и с ContainableObjectFactory но действия выполняются в транзации
  */
 public interface Transaction {
   /**

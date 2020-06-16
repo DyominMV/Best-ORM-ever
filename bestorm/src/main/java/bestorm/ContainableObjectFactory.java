@@ -6,7 +6,7 @@ import bestorm.filters.ValueFilter;
 /**
  * Служит для получения объектов из БД
  * 
- * @param <T>
+ * @param <T> тип объектов которые мапятся в отношения
  */
 public interface ContainableObjectFactory<T extends Identifiable> {
 
