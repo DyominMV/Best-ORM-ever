@@ -7,13 +7,6 @@
   <groupId>alyona</groupId>
   <artifactId>bestorm</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
-  <name>Java 11 Application</name>
-  <inceptionYear>2020</inceptionYear>
-  <organization>
-    <name>Organization Name</name>
-  </organization>
 
   <properties>
     <java.version>11</java.version>
