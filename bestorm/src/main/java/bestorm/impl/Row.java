@@ -9,14 +9,17 @@ import bestorm.impl.exceptions.WrongTableException;
 
 public class Row<T extends Identifiable> implements Containable<T> {
 
-  public Row(ResultSet resultSet) throws WrongTableException{
+  private final Table<T> table;
+
+  public Row(ResultSet resultSet, Table<T> table) throws WrongTableException{
+    this.table = table;
     // TODO сконструировать объект строки таблицы из resultSet
     // НЕ СДВИГАТЬ КУРСОР ResultSet-а
   }
 
   @Override
   public boolean update() throws IllegalStateException, SQLException {
-    // TODO Auto-generated method stub
+    // Update Table.getName SET ( table.field(1).toString() = object.field(1).value)
     return false;
   }
 
