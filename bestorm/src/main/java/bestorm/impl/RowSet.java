@@ -1,104 +1,78 @@
 package bestorm.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Consumer;
+import bestorm.Containable;
+import bestorm.ContainableCollection;
 import bestorm.Identifiable;
+import bestorm.impl.exceptions.WrongTableException;
 import bestorm.impl.util.Destructable;
+import bestorm.impl.util.RunnableWrapper;
 
-public class RowSet<T extends Identifiable> extends Destructable implements Collection<Row<T>> {
-
-  private static String ERROR_MESSAGE = "This collection is unmodifiable";
-
-  @Override
-  public boolean add(Row<T> arg0) {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
-
-  @Override
-  public boolean addAll(Collection<? extends Row<T>> arg0) {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
-
-  @Override
-  public void clear() {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
-
-  @Override
-  public boolean remove(Object arg0) {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
-
-  @Override
-  public boolean removeAll(Collection<?> arg0) {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
-
-  @Override
-  public boolean retainAll(Collection<?> arg0) {
-    throw new UnsupportedOperationException(ERROR_MESSAGE);
-  }
+public class RowSet<T extends Identifiable> extends Destructable
+    implements ContainableCollection<T> {
 
   private final ResultSet resultSet;
-  private final Collection<Row<T>> readyRows;
 
-  @Override
-  public boolean contains(Object arg0) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean containsAll(Collection<?> arg0) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean isEmpty() {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public Iterator<Row<T>> iterator() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public int size() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public Object[] toArray() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public <T> T[] toArray(T[] arg0) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public RowSet(final ResultSet resultSet) {
-    super(() -> {
+  public RowSet(final PreparedStatement statement) throws SQLException {
+    super(new RunnableWrapper());
+    statement.execute();
+    final ResultSet resultSet = statement.getResultSet();
+    ((RunnableWrapper) this.getDestructor()).setAction(() -> {
       try {
         if (!resultSet.isClosed()) {
           resultSet.close();
         }
+        if (!statement.isClosed()) {
+          statement.close();
+        }
       } catch (SQLException e) {
         e.printStackTrace();
       }
-    }, true);
+    });
     this.resultSet = resultSet;
-    readyRows = new ArrayList<Row<T>>();
+  }
+
+  @Override
+  public Iterator<Containable<T>> iterator() {
+    return new Iterator<Containable<T>>() {
+
+      private final ResultSet rSet = resultSet;
+
+      {
+        next();
+      }
+
+      private Row<T> next = null;
+
+      @Override
+      public boolean hasNext() {
+        return (next != null);
+      }
+
+      @Override
+      public Containable<T> next() {
+        Containable<T> current = next;
+        try {
+          if (resultSet.next()) {
+            next = new Row<T>(rSet);
+          } else {
+            next = null;
+          }
+        } catch (SQLException | WrongTableException e) {
+          next = null;
+        }
+        return current;
+      }
+    };
+  }
+
+  @Override
+  public void process(Consumer<ContainableCollection<T>> processor) {
+    processor.accept(this);
   }
 
 }

@@ -1,6 +1,7 @@
 package bestorm;
 
 import java.sql.Connection;
+import java.util.Map;
 import bestorm.impl.Table;
 
 /**
@@ -9,9 +10,12 @@ import bestorm.impl.Table;
  */
 public class Registrar extends RegistrarBase {
 
+  private final Map<Class<? extends Identifiable>, Table<? extends Identifiable>> classMap;
+
   protected Registrar(Iterable<Class<? extends Identifiable>> classes, Connection connection)
       throws Exception {
     super(classes, connection);
+    
     checkIntegrity();
   }
 
