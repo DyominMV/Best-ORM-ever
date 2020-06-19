@@ -7,12 +7,11 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import bestorm.Containable;
 import bestorm.ContainableCollection;
-import bestorm.Identifiable;
 import bestorm.impl.exceptions.WrongTableException;
 import bestorm.impl.util.Destructable;
 import bestorm.impl.util.RunnableWrapper;
 
-public class RowSet<T extends Identifiable> extends Destructable
+public class RowSet<T> extends Destructable
     implements ContainableCollection<T> {
 
   private final ResultSet resultSet;

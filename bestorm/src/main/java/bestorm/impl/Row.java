@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 import bestorm.Containable;
-import bestorm.Identifiable;
 import bestorm.impl.exceptions.WrongTableException;
 
-public class Row<T extends Identifiable> implements Containable<T> {
+public class Row<T> implements Containable<T> {
 
   private final Table<T> table;
 

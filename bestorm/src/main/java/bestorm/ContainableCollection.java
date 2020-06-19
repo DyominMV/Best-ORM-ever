@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  * 
  * @param <T> Объекты которые мапятся в отношения
  */
-public interface ContainableCollection<T extends Identifiable> extends Iterable<Containable<T>> {
+public interface ContainableCollection<T> extends Iterable<Containable<T>> {
   /**
    * Для отложенной обработки коллекции полученной из транзакции
    * 

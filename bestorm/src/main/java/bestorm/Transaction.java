@@ -10,7 +10,7 @@ public interface Transaction {
    * @param <T> 
    * @return
    */
-  public <T extends Identifiable> ContainableObjectFactory<T> getFactory();
+  public <T> ContainableObjectFactory<T> getFactory();
 
   /**
    * Выполнить транзакцию

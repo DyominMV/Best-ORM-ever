@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import bestorm.Containable;
 import bestorm.ContainableCollection;
 import bestorm.ContainableObjectFactory;
-import bestorm.Identifiable;
 import bestorm.filters.ValueFilter;
 
-public class Table<T extends Identifiable> implements ContainableObjectFactory<T> {
+public class Table<T> implements ContainableObjectFactory<T> {
 
   private final Connection connection;
   private final ArrayList<TableField> fields = new ArrayList<>();

@@ -15,9 +15,9 @@ import bestorm.impl.util.Destructable;
 public class Registrar extends Destructable {
 
   private final Connection connection;
-  private final Map<Class<? extends Identifiable>, Table<? extends Identifiable>> classMap;
+  private final Map<Class<?>, Table<?>> classMap;
 
-  public Registrar(Iterable<Class<? extends Identifiable>> classes, Connection connection)
+  public Registrar(Iterable<Class<?>> classes, Connection connection)
       throws Exception {
     super(() -> {
       try {
@@ -29,7 +29,7 @@ public class Registrar extends Destructable {
     });
     this.connection = Objects.requireNonNull(connection);
     classMap = new HashMap<>();
-    for (Class<? extends Identifiable> classObject : classes) {
+    for (Class<?> classObject : classes) {
       classMap.put(classObject, new Table(connection, classObject));
     }
     checkIntegrity();
@@ -48,13 +48,13 @@ public class Registrar extends Destructable {
     return null;
   }
 
-  public <T extends Identifiable> ContainableObjectFactory<T> createFactory() {
+  public <T> ContainableObjectFactory<T> createFactory() {
     // TODO Auto-generated method stub
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends Identifiable> Table<T> getTable(Class<T> classObject) {
+  public <T> Table<T> getTable(Class<T> classObject) {
     return (Table<T>)classMap.get(classObject);
   }
 

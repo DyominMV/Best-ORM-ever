@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * 
  * @param <T> Тип данных, который мапится в отношение
  */
-public interface Containable<T extends Identifiable> {
+public interface Containable<T> {
 
   /**
    * Изменить строку соответствующую данному объекту в зависимости от текущего состояния объекта

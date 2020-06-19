@@ -8,7 +8,7 @@ import bestorm.filters.ValueFilter;
  * 
  * @param <T> тип объектов которые мапятся в отношения
  */
-public interface ContainableObjectFactory<T extends Identifiable> {
+public interface ContainableObjectFactory<T> {
 
   /**
    * Создать запись в таблице и получить экземпляр Containable
