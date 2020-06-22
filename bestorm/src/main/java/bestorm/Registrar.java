@@ -17,8 +17,7 @@ public class Registrar extends Destructable {
   private final Connection connection;
   private final Map<Class<?>, Table<?>> classMap;
 
-  public Registrar(Iterable<Class<?>> classes, Connection connection)
-      throws Exception {
+  public Registrar(Iterable<Class<?>> classes, Connection connection) throws Exception {
     super(() -> {
       try {
         if (!connection.isClosed())
@@ -30,9 +29,15 @@ public class Registrar extends Destructable {
     this.connection = Objects.requireNonNull(connection);
     classMap = new HashMap<>();
     for (Class<?> classObject : classes) {
-      classMap.put(classObject, new Table(connection, classObject));
+      register(classObject);
     }
     checkIntegrity();
+  }
+
+  public void register(Class<?> classObject) {
+    if (!classMap.containsKey(classObject)) {
+      classMap.put(classObject, new Table(this, classObject));
+    }
   }
 
   private void checkIntegrity() {
@@ -55,7 +60,7 @@ public class Registrar extends Destructable {
 
   @SuppressWarnings("unchecked")
   public <T> Table<T> getTable(Class<T> classObject) {
-    return (Table<T>)classMap.get(classObject);
+    return (Table<T>) classMap.get(classObject);
   }
 
 }
