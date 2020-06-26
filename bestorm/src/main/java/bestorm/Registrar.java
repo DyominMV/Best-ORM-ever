@@ -31,17 +31,14 @@ public class Registrar extends Destructable {
     for (Class<?> classObject : classes) {
       register(classObject);
     }
-    checkIntegrity();
   }
 
-  public void register(Class<?> classObject) {
+  public Table<?> register(Class<?> classObject) {
     if (!classMap.containsKey(classObject)) {
-      classMap.put(classObject, new Table(this, classObject));
+      return classMap.put(classObject, new Table(this, classObject));
+    } else {
+      return classMap.get(classObject);
     }
-  }
-
-  private void checkIntegrity() {
-    // TODO triggers
   }
 
   public Connection getConnection() {
