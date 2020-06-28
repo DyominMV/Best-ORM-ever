@@ -43,7 +43,11 @@ public class Table<T> implements ContainableObjectFactory<T> {
      * @param field
      */
     public TableField(Field field) {
-      // TODO add some reflection and foreign-key stuff
+      // TODO add some reflection
+      /**
+       * 1 регистрация новой таблички и создание референта если надо
+       * 2 назначение имени
+       */
       name = null;
       type = null;
       referent = null;
