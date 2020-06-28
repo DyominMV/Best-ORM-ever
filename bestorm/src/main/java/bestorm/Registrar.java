@@ -31,6 +31,7 @@ public class Registrar extends Destructable {
     for (Class<?> classObject : classes) {
       register(classObject);
     }
+    // TODO внешние ключи
   }
 
   public Table<?> register(Class<?> classObject) {

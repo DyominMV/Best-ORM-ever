@@ -8,10 +8,13 @@ import java.util.Map;
 import bestorm.Containable;
 import bestorm.ContainableCollection;
 import bestorm.ContainableObjectFactory;
+import bestorm.Primary;
 import bestorm.Registrar;
 import bestorm.filters.ValueFilter;
 
 public class Table<T> implements ContainableObjectFactory<T> {
+
+  private static final String SURROGATE_KEY_NAME = "ID";
 
   public class TableField {
     private final String name;
@@ -34,6 +37,11 @@ public class Table<T> implements ContainableObjectFactory<T> {
       return name;
     }
 
+    /**
+     * Для обычного поля
+     * 
+     * @param field
+     */
     public TableField(Field field) {
       // TODO add some reflection and foreign-key stuff
       name = null;
@@ -41,6 +49,12 @@ public class Table<T> implements ContainableObjectFactory<T> {
       referent = null;
     }
 
+    /**
+     * Для суррогатного ключа
+     * 
+     * @param name название
+     * @param type тип
+     */
     public TableField(String name, FieldType type) {
       this.name = name;
       this.type = type;
@@ -48,11 +62,12 @@ public class Table<T> implements ContainableObjectFactory<T> {
     }
   }
 
-  private final Class<T> classObject; 
-  private final Registrar registrar; 
+  private final Class<T> classObject;
+  private final Registrar registrar;
   private final Map<Field, TableField> declaredFields = new HashMap<>();
   private final ArrayList<TableField> primaryKeys = new ArrayList<>();
-  
+  private final String name;
+
   @Override
   public Containable<T> get() throws SQLException {
     // TODO create prepared statement and return Row<T> (statement.getResultSet, this)
@@ -74,10 +89,16 @@ public class Table<T> implements ContainableObjectFactory<T> {
   public Table(Registrar registrar, Class<T> classObject) {
     this.registrar = registrar;
     this.classObject = classObject;
-    for (Field field : classObject.getDeclaredFields()){
-      this.declaredFields.put(field, new TableField(field));
+    this.name = classObject.getName();
+    for (Field field : classObject.getDeclaredFields()) {
+      TableField tableField =  this.declaredFields.put(field, new TableField(field));
+      if (field.isAnnotationPresent(Primary.class)){
+        this.primaryKeys.add(tableField);
+      }
     }
-    // TODO fill fields (some reflection stuff) (c)Alena
+    if (primaryKeys.isEmpty()){
+      primaryKeys.add(new TableField(SURROGATE_KEY_NAME, FieldType.INT));
+    }
   }
 
 }
