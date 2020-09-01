@@ -1,9 +1,8 @@
-package alyona.bestorm.annotations.classes;
+package alyona.bestorm.annotations.fields;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StoredTable {
-  String tableName();
+public @interface IndexField {
 }
